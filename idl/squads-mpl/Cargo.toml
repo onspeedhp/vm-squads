@@ -1,5 +1,5 @@
 [package]
-name = "squads_mpl"
+name = "squads-mpl"
 version = "0.1.0"
 description = "Created with Anchor"
 edition = "2021"
@@ -16,6 +16,5 @@ cpi = ["no-entrypoint"]
 default = []
 
 [dependencies]
+anchor-lang = "0.29.0"
 anchor-gen = "0.3.1"
-anchor-lang = ">=0.20"
-

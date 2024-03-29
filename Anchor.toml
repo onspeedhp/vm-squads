@@ -4,15 +4,14 @@
 seeds = false
 skip-lint = false
 
-[programs.localnet]
-squads_mpl = "SMPLecH534NA9acpos4G6x7uf3LWbCAwZQE9e8ZekMu"
-vm-squads = "HBEW6kz7GVTfdUZKCWbzF1VZA344zBqbKzYPUP5J1UQE"
+[programs.devnet]
+vm-squads = "5DFsW9hcUbk8feRA64mVWiueKkhwoWQHB7ypWgDgfJB7"
 
 [registry]
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "Localnet"
+cluster = "Devnet"
 wallet = "/Users/admin/.config/solana/id.json"
 
 [scripts]

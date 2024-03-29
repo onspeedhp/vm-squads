@@ -1,0 +1,398 @@
+{
+  "version": "0.1.0",
+  "name": "solana_workflow",
+  "instructions": [
+    {
+      "name": "createWorkflow",
+      "accounts": [
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "workflow",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "workflowProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "title",
+          "type": "string"
+        },
+        {
+          "name": "start",
+          "type": "u16"
+        },
+        {
+          "name": "workflowId",
+          "type": "u64"
+        },
+        {
+          "name": "inputCheckpoints",
+          "type": {
+            "vec": {
+              "defined": "InputCheckPoint"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "createMission",
+      "accounts": [
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "mission",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "voteData",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "workflowId",
+          "type": "u64"
+        },
+        {
+          "name": "missionId",
+          "type": "u64"
+        },
+        {
+          "name": "title",
+          "type": "string"
+        },
+        {
+          "name": "content",
+          "type": "string"
+        },
+        {
+          "name": "currentVoteData",
+          "type": "publicKey"
+        },
+        {
+          "name": "checkpointId",
+          "type": "u16"
+        },
+        {
+          "name": "voteDataId",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "moveNextCheckpoint",
+      "accounts": [
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "mission",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "nextCheckpoint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "currentCheckpoint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "nextVoteData",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "currentVoteData",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "voteDataId",
+          "type": "u16"
+        }
+      ]
+    },
+    {
+      "name": "changeVariable",
+      "accounts": [
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "mission",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "variable",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "value",
+          "type": "bytes"
+        },
+        {
+          "name": "variableId",
+          "type": "u8"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "Mission",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "workflowId",
+            "type": "u64"
+          },
+          {
+            "name": "id",
+            "type": "u64"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "content",
+            "type": "string"
+          },
+          {
+            "name": "currentVoteData",
+            "type": "publicKey"
+          },
+          {
+            "name": "status",
+            "type": {
+              "defined": "Status"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "Variable",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "value",
+            "type": "bytes"
+          }
+        ]
+      }
+    },
+    {
+      "name": "VoteData",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "id",
+            "type": "u64"
+          },
+          {
+            "name": "checkpointId",
+            "type": "u16"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Workflow",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "author",
+            "type": "publicKey"
+          },
+          {
+            "name": "workflowId",
+            "type": "u64"
+          },
+          {
+            "name": "start",
+            "type": "u16"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "noVariable",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "CheckPoint",
+      "docs": [
+        "CheckPoint data",
+        "vote_machine: None if the CheckPoint is the leaf or Pubkey if the CheckPoint is an internal node",
+        "options: None if the CheckPoint is the leaf or Some if the CheckPoint is an internal node"
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "workflowId",
+            "type": "u64"
+          },
+          {
+            "name": "id",
+            "type": "u16"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "options",
+            "type": {
+              "option": {
+                "vec": {
+                  "defined": "VoteOption"
+                }
+              }
+            }
+          },
+          {
+            "name": "voteMachine",
+            "type": {
+              "option": "publicKey"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "types": [
+    {
+      "name": "InputCheckPoint",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "id",
+            "type": "u16"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "options",
+            "type": {
+              "option": {
+                "vec": {
+                  "defined": "VoteOption"
+                }
+              }
+            }
+          },
+          {
+            "name": "voteMachineAddress",
+            "type": {
+              "option": "publicKey"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "InputVote",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "option",
+            "type": "u16"
+          }
+        ]
+      }
+    },
+    {
+      "name": "VoteOption",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "title",
+            "type": "string"
+          },
+          {
+            "name": "nextId",
+            "type": "u16"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Status",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "CLOSED"
+          },
+          {
+            "name": "STARTED"
+          }
+        ]
+      }
+    }
+  ]
+}
