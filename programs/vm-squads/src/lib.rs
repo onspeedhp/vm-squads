@@ -6,7 +6,7 @@ pub mod state;
 
 use account::*;
 
-declare_id!("3XR9BbkbddGNFCbEG59XXEy9MydHZmGZb6jEq4VxQWY7");
+declare_id!("5mu1kEPvm144whERH8q2WumCeTEvWtN2ajnAbLjoVwc1");
 
 #[program]
 pub mod vm_squads {

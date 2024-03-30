@@ -1,6 +1,7 @@
 import * as anchor from '@coral-xyz/anchor';
 import { Program } from '@coral-xyz/anchor';
 import { VmSquads } from '../target/types/vm_squads';
+import { SquadsMpl, IDL } from '../idl/squads_mpl';
 import * as borsh from 'borsh';
 
 import {
@@ -22,16 +23,32 @@ describe('vm-squads', () => {
     const squadMpl = new PublicKey(
       'SMPLecH534NA9acpos4G6x7uf3LWbCAwZQE9e8ZekMu'
     );
+
+    const squadsMplProgram = new Program(IDL, squadMpl, anchorProvider);
+
     const multisig = new PublicKey(
       '6FuFL12N1oqfFMKykAncBJgS4XYZxR1QYETbFJDqaftM'
     );
+
+    const txnIndex: number = (await squadsMplProgram.account.ms.fetch(multisig))
+      .transactionIndex;
 
     const [transactionPDA, _] = PublicKey.findProgramAddressSync(
       [
         Buffer.from('squad'),
         multisig.toBuffer(),
-        Buffer.from(borsh.serialize('u32', 8)),
+        Buffer.from(borsh.serialize('u32', txnIndex + 1)),
         Buffer.from('transaction'),
+      ],
+      squadMpl
+    );
+
+    const [insPDA, __] = PublicKey.findProgramAddressSync(
+      [
+        Buffer.from('squad'),
+        transactionPDA.toBuffer(),
+        Buffer.from([1]),
+        Buffer.from('instruction'),
       ],
       squadMpl
     );
@@ -43,6 +60,7 @@ describe('vm-squads', () => {
         multisig: multisig,
         transaction: transactionPDA,
         squadsMpl: squadMpl,
+        instruction: insPDA,
       })
       .rpc({ skipPreflight: true });
 

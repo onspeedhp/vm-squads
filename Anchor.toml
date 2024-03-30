@@ -5,6 +5,9 @@ seeds = false
 skip-lint = false
 
 [programs.devnet]
+vm-squads = "5mu1kEPvm144whERH8q2WumCeTEvWtN2ajnAbLjoVwc1"
+
+[programs.localnet]
 vm-squads = "3XR9BbkbddGNFCbEG59XXEy9MydHZmGZb6jEq4VxQWY7"
 
 [registry]
